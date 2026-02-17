@@ -1,75 +1,109 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Achievement, Category, DEFAULT_CATEGORIES } from '@/types/internship';
+import { useState, useEffect, useCallback } from "react";
+import { Achievement, Category } from "@/types/internship";
 
-const STORAGE_KEYS = {
-  achievements: 'internship_achievements',
-  categories: 'internship_categories',
-};
+const API = "/api";
 
-function loadFromStorage<T>(key: string, fallback: T): T {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function saveToStorage<T>(key: string, data: T) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
+//
+// ACHIEVEMENTS
+//
 export function useAchievements() {
-  const [achievements, setAchievements] = useState<Achievement[]>(() =>
-    loadFromStorage(STORAGE_KEYS.achievements, [])
-  );
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
+  // Fetch on load
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.achievements, achievements);
-  }, [achievements]);
-
-  const addAchievement = useCallback((data: Omit<Achievement, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const now = new Date().toISOString();
-    const achievement: Achievement = {
-      ...data,
-      id: crypto.randomUUID(),
-      createdAt: now,
-      updatedAt: now,
-    };
-    setAchievements(prev => [achievement, ...prev]);
-    return achievement;
+    fetch(`${API}/achievements`)
+      .then(res => res.json())
+      .then(setAchievements)
+      .catch(console.error);
   }, []);
 
-  const updateAchievement = useCallback((id: string, data: Partial<Achievement>) => {
+  const addAchievement = useCallback(async (
+    data: {
+      title: string;
+      description: string;
+      date: string;
+      category: string;
+      tags: string[];
+      notes: string;
+      timeSpent: number;
+      skills: string[];
+    }
+  ) => {
+    const res = await fetch(`${API}/achievements`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const created = await res.json();
+    setAchievements(prev => [created, ...prev]);
+    return created;
+  }, []);
+
+  const updateAchievement = useCallback(async (
+    id: string,
+    data: Partial<Achievement>
+  ) => {
+    const res = await fetch(`${API}/achievements/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const updated = await res.json();
     setAchievements(prev =>
-      prev.map(a => a.id === id ? { ...a, ...data, updatedAt: new Date().toISOString() } : a)
+      prev.map(a => (a._id === id ? updated : a))
     );
   }, []);
 
-  const deleteAchievement = useCallback((id: string) => {
-    setAchievements(prev => prev.filter(a => a.id !== id));
+  const deleteAchievement = useCallback(async (id: string) => {
+    await fetch(`${API}/achievements/${id}`, {
+      method: "DELETE",
+    });
+
+    setAchievements(prev =>
+      prev.filter(a => a._id !== id)
+    );
   }, []);
 
   return { achievements, addAchievement, updateAchievement, deleteAchievement };
 }
 
+//
+// CATEGORIES
+//
 export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>(() =>
-    loadFromStorage(STORAGE_KEYS.categories, DEFAULT_CATEGORIES)
-  );
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.categories, categories);
-  }, [categories]);
-
-  const addCategory = useCallback((data: Omit<Category, 'id'>) => {
-    const category: Category = { ...data, id: crypto.randomUUID() };
-    setCategories(prev => [...prev, category]);
-    return category;
+    fetch(`${API}/categories`)
+      .then(res => res.json())
+      .then(setCategories)
+      .catch(console.error);
   }, []);
 
-  const deleteCategory = useCallback((id: string) => {
-    setCategories(prev => prev.filter(c => c.id !== id));
+  const addCategory = useCallback(async (
+    data: Omit<Category, "id">
+  ) => {
+    const res = await fetch(`${API}/categories`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const created = await res.json();
+    setCategories(prev => [...prev, created]);
+    return created;
+  }, []);
+
+  const deleteCategory = useCallback(async (id: string) => {
+    await fetch(`${API}/categories/${id}`, {
+      method: "DELETE",
+    });
+
+    setCategories(prev =>
+      prev.filter(c => c._id !== id)
+    );
   }, []);
 
   return { categories, addCategory, deleteCategory };

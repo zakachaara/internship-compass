@@ -1,0 +1,19 @@
+import mongoose from "mongoose";
+
+const AchievementSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    date: { type: String, required: true },
+    category: { type: String, required: true },
+    tags: { type: [String], default: [] },
+    notes: { type: String, default: "" },
+    timeSpent: { type: Number, default: 0 },
+    skills: { type: [String], default: [] }
+  },
+  {
+    timestamps: true // This will automatically add createdAt and updatedAt
+  }
+);
+
+export default mongoose.model("Achievement", AchievementSchema);

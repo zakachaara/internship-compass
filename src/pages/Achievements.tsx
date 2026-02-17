@@ -22,9 +22,9 @@ export default function Achievements() {
     return matchSearch && matchCat;
   });
 
-  const handleSave = (data: Omit<Achievement, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleSave = (data) => {
     if (editing) {
-      updateAchievement(editing.id, data);
+      updateAchievement(editing._id, data);
       setEditing(undefined);
     } else {
       addAchievement(data);
@@ -49,7 +49,7 @@ export default function Achievements() {
           <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+            {categories.map(c => <SelectItem key={c._id} value={c.name}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
@@ -59,7 +59,7 @@ export default function Achievements() {
           <p className="text-sm text-muted-foreground text-center py-8">No achievements found</p>
         ) : (
           filtered.map(a => (
-            <AchievementCard key={a.id} achievement={a} categories={categories}
+            <AchievementCard key={a._id} achievement={a} categories={categories}
               onEdit={a => { setEditing(a); setFormOpen(true); }} onDelete={deleteAchievement} />
           ))
         )}

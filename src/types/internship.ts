@@ -1,5 +1,5 @@
 export interface Achievement {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   date: string;
@@ -13,7 +13,7 @@ export interface Achievement {
 }
 
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   color: string;
   icon?: string;
@@ -28,12 +28,12 @@ export interface WeeklyReflection {
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'backend', name: 'Backend', color: 'hsl(220, 70%, 55%)' },
-  { id: 'frontend', name: 'Frontend', color: 'hsl(172, 60%, 45%)' },
-  { id: 'devops', name: 'DevOps', color: 'hsl(280, 55%, 60%)' },
-  { id: 'research', name: 'Research', color: 'hsl(35, 85%, 60%)' },
-  { id: 'meetings', name: 'Meetings', color: 'hsl(340, 60%, 60%)' },
-  { id: 'learning', name: 'Learning', color: 'hsl(152, 55%, 45%)' },
+  { _id: 'backend', name: 'Backend', color: 'hsl(220, 70%, 55%)' },
+  { _id: 'frontend', name: 'Frontend', color: 'hsl(172, 60%, 45%)' },
+  { _id: 'devops', name: 'DevOps', color: 'hsl(280, 55%, 60%)' },
+  { _id: 'research', name: 'Research', color: 'hsl(35, 85%, 60%)' },
+  { _id: 'meetings', name: 'Meetings', color: 'hsl(340, 60%, 60%)' },
+  { _id: 'learning', name: 'Learning', color: 'hsl(152, 55%, 45%)' },
 ];
 
 export const CATEGORY_COLORS: Record<string, string> = {

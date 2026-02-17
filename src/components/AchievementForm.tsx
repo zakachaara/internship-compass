@@ -11,7 +11,7 @@ import { X } from 'lucide-react';
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSave: (data: Omit<Achievement, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSave: (data) => void;
   categories: Category[];
   initial?: Achievement;
 }
@@ -44,7 +44,7 @@ export default function AchievementForm({ open, onClose, onSave, categories, ini
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{initial ? 'Edit Achievement' : 'New Achievement'}</DialogTitle>
         </DialogHeader>
@@ -73,7 +73,7 @@ export default function AchievementForm({ open, onClose, onSave, categories, ini
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 {categories.map(c => (
-                  <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>
+                  <SelectItem key={c._id} value={c.name}>{c.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

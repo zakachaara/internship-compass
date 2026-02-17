@@ -53,7 +53,7 @@ export default function AchievementCard({ achievement, categories, onEdit, onDel
           <button onClick={() => onEdit(achievement)} className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
             <Pencil className="h-3.5 w-3.5" />
           </button>
-          <button onClick={() => onDelete(achievement.id)} className="p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+          <button onClick={() => onDelete(achievement._id)} className="p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>
